@@ -26,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,6 +65,17 @@ class BeerControllerTest {
                         ),
                         requestParameters(
                                 parameterWithName("iscold").description("Is Beer cold Query Param")
+                        ),
+                        responseFields(
+                               fieldWithPath("id").description("Id of Beer"),
+                                fieldWithPath("version").description("Version Number"),
+                                fieldWithPath("createdDate").description("Created Date"),
+                                fieldWithPath("lastModifiedDate").description("Last Modified Date"),
+                                fieldWithPath("beerName").description("Beer Name"),
+                                fieldWithPath("beerStyle").description("Beer Style"),
+                                fieldWithPath("upc").description("UPC of Beer"),
+                                fieldWithPath("price").description("Price of Beer"),
+                                fieldWithPath("quantityOnHand").description("Quantity On Hand")
                         )));
     }
 
@@ -75,7 +87,19 @@ class BeerControllerTest {
         mockMvc.perform(post("/api/v1/beer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andDo(document("v1/beer",
+                        requestFields(
+                                fieldWithPath("id").description("Id of Beer").ignored(),
+                                fieldWithPath("version").description("Version Number").ignored(),
+                                fieldWithPath("createdDate").description("Created Date").ignored(),
+                                fieldWithPath("lastModifiedDate").description("Last Modified Date").ignored(),
+                                fieldWithPath("beerName").description("Beer Name"),
+                                fieldWithPath("beerStyle").description("Beer Style"),
+                                fieldWithPath("upc").description("UPC of Beer").attributes(),
+                                fieldWithPath("price").description("Price of Beer"),
+                                fieldWithPath("quantityOnHand").description("Quantity On Hand").ignored()
+                        )));
     }
 
     @Test
